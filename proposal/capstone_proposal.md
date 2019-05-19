@@ -6,19 +6,18 @@ December 19 May, 2019
 ## Proposal
 ### Domain Background
 
-Running a profitable business is quite complicated. You have to keep juggling lots of balls in the sametime. Juggling those balls and keeping them in the air comes down to the ability to make lots of small decisions everyday. Taking out the guesswork out of the decision process can make all the difference between a successful and failed businesses.
+Running a profitable business is quite complicated. You have to keep juggling lots of balls at the sametime. Juggling those balls and keeping them in the air comes down to the ability to make lots of small decisions everyday. Taking out the guesswork out of the decision process can make all the difference between successful and failed businesses.
 
-Software as a service ( SaaS ) specially subscription based services rely on the existing customer base on covering their expenses and on generally maintaining a healthy cache flow. Customer churning can cost a business dearly;
+
+Entrepreneur at heart I am always interested in understanding how businesses work and that can't be separated from understanding human behviour.
+
+### Problem Statement
+
+Software as a service ( SaaS ), specially subscription based services, rely on the existing customer base to cover their expenses and to generally maintain a healthy cashflow. Customer churning can cost a business dearly in;
 - cost of aquiring new customers
 - Bad publicity through word of mouth
 
 ref: https://www.salesforce.com/blog/2013/08/customer-service-stats.html
-
-Enterpruener at heart I am always interested in understanding how businesses work and that can't be separated from understanding human behviour.
-
-### Problem Statement
-
-The main objective of the projet would be to be able to predict if a customer is going to churn or not in order to take corrective action. when given some collected data about the user usage the model should be able to predict if the user will churn or not.
 
 ### Datasets and Inputs
 
@@ -27,7 +26,7 @@ Because of the great difference between services types, subscriptions, etc... th
 ### Solution Statement
 _(approx. 1 paragraph)_
 
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
+The main objective of the projet is to build a model to predict if a customer is going to churn or not. Given data about the user usage of the service the model can classify into two classes: churning or not-churning
 
 ### Benchmark Model
 _(approximately 1-2 paragraphs)_
