@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
 Peter Shoukry
-December 19 May, 2019
+May 19, 2019
 
 ## Proposal
 ### Domain Background
