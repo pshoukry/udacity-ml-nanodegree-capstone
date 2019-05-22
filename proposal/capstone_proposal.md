@@ -12,8 +12,10 @@ Running a profitable business is quite complicated. You need to juggle lots of b
 Entrepreneur at heart I am always interested in understanding how businesses work and that can't be separated from understanding human behviour.
 
 similar research:
-- https://thesai.org/Downloads/Volume9No2/Paper_38-Machine_Learning_Techniques_for_Customer_Retention.pdf
-- https://www.h2o.ai/wp-content/uploads/2019/02/Case-Studies_PayPal.pdf
+
+https://thesai.org/Downloads/Volume9No2/Paper_38-Machine_Learning_Techniques_for_Customer_Retention.pdf
+
+https://www.h2o.ai/wp-content/uploads/2019/02/Case-Studies_PayPal.pdf
 
 
 ### Problem Statement
