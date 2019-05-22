@@ -1,4 +1,3 @@
-![image](../images/image.png)
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
 Joe Udacity
