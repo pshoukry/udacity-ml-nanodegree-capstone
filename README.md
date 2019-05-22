@@ -9,6 +9,10 @@ To setup the environment please run:
 pipenv install
 pipenv shell
 ```
-### Dataset
-The data set can be downloaded [here](https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-Telco-Customer-Churn.csv) and can also be found in [data](data/)
-
+### Structure
+[data](data/) - The data files used in the project
+[images](images/) - Images used in the report
+[notebooks](notebooks/) - All notebooks used in the project
+[proposal](proposal/) - The project proposal files
+[report](report/) - The project final report files
+[README.md](README.md) - This readme
