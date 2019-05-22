@@ -10,9 +10,9 @@ pipenv install
 pipenv shell
 ```
 ### Structure
-[data](data/) - The data files used in the project
-[images](images/) - Images used in the report
-[notebooks](notebooks/) - All notebooks used in the project
-[proposal](proposal/) - The project proposal files
-[report](report/) - The project final report files
-[README.md](README.md) - This readme
+- [data](data/) - The data files used in the project
+- [images](images/) - Images used in the report
+- [notebooks](notebooks/) - All notebooks used in the project
+- [proposal](proposal/) - The project proposal files
+- [report](report/) - The project final report files
+- [README.md](README.md) - This readme
