@@ -48,31 +48,138 @@ we will also use a simple benchmark model that assumes all users are going to ke
 
 
 ## II. Analysis
-_(approx. 2-4 pages)_
 
 ### Data Exploration
 In this section, you will be expected to analyze the data you are using for the problem. This data can either be in the form of a dataset (or datasets), input data (or input files), or even an environment. The type of data should be thoroughly described and, if possible, have basic statistics and information presented (such as discussion of input features or defining characteristics about the input or environment). Any abnormalities or interesting qualities about the data that may need to be addressed have been identified (such as features that need to be transformed or the possibility of outliers). Questions to ask yourself when writing this section:
-- _If a dataset is present for this problem, have you thoroughly discussed certain features about the dataset? Has a data sample been provided to the reader?_
-- _If a dataset is present for this problem, are statistics about the dataset calculated and reported? Have any relevant results from this calculation been discussed?_
-- _If a dataset is **not** present for this problem, has discussion been made about the input space or input data for your problem?_
-- _Are there any abnormalities or characteristics about the input space or dataset that need to be addressed? (categorical variables, missing values, outliers, etc.)_
+
+The data set is part of IBM watson community data sets. It consists of 7043 records each with 20 features plus one column to indicate if the user did churn or not. A sample of the records is provided below.
+
+|                  | 0                | 1            | 2              | 3                         | 4                |
+|:-----------------|:-----------------|:-------------|:---------------|:--------------------------|:-----------------|
+| customerID       | 7590-VHVEG       | 5575-GNVDE   | 3668-QPYBK     | 7795-CFOCW                | 9237-HQITU       |
+| gender           | Female           | Male         | Male           | Male                      | Female           |
+| SeniorCitizen    | 0                | 0            | 0              | 0                         | 0                |
+| Partner          | Yes              | No           | No             | No                        | No               |
+| Dependents       | No               | No           | No             | No                        | No               |
+| tenure           | 1                | 34           | 2              | 45                        | 2                |
+| PhoneService     | No               | Yes          | Yes            | No                        | Yes              |
+| MultipleLines    | No phone service | No           | No             | No phone service          | No               |
+| InternetService  | DSL              | DSL          | DSL            | DSL                       | Fiber optic      |
+| OnlineSecurity   | No               | Yes          | Yes            | Yes                       | No               |
+| OnlineBackup     | Yes              | No           | Yes            | No                        | No               |
+| DeviceProtection | No               | Yes          | No             | Yes                       | No               |
+| TechSupport      | No               | No           | No             | Yes                       | No               |
+| StreamingTV      | No               | No           | No             | No                        | No               |
+| StreamingMovies  | No               | No           | No             | No                        | No               |
+| Contract         | Month-to-month   | One year     | Month-to-month | One year                  | Month-to-month   |
+| PaperlessBilling | Yes              | No           | Yes            | No                        | Yes              |
+| PaymentMethod    | Electronic check | Mailed check | Mailed check   | Bank transfer (automatic) | Electronic check |
+| MonthlyCharges   | 29.85            | 56.95        | 53.85          | 42.3                      | 70.7             |
+| TotalCharges     | 29.85            | 1889.5       | 108.15         | 1840.75                   | 151.65           |
+| Churn            | No               | No           | Yes            | No                        | Yes              |
+
+Note: The sample was transposed to fit the report width
+
+Because of the size of the dataset classical ML techniques will be used to build the prediction model and we will not use deep learning.
+
+The dataset has the following fields:
+
+**customerID**: String - The customer ID and is unique for each user
+- The customer ID is unique per user and will be removed
+
+**gender**: String - Whether the customer is a male or female (Male, Female)
+- Categorial value, we will one hot encode it to work with the model
+
+**SeniorCitizen**: Number - Whether the customer is senior citizen or not ( 1, 0)
+**Partner**: String - Whether the customer has a partner or not (Yes, No)
+- Categorial value, we will one hot encode it to work with the model
+
+**Dependents**: String - Whether the customer has dependents or not (Yes, No)
+- Categorial value, we will one hot encode it to work with the model
+
+**tenure**: Number - Number of months the customer has stayed with the company
+**PhoneService**: String - Whether the customer has a phone service or not (Yes, No)
+- Categorial value, we will one hot encode it to work with the model
+
+**MultipleLines**: String - Whether the customer has multiple lines or not (Yes, No, No phone service)
+- Categorial value, we will one hot encode it to work with the model
+
+**InternetService**: String - Type of internet service (DSL, Fiber optic, No)
+- Categorial value, we will one hot encode it to work with the model
+
+**OnlineSecurity**: String - Whether the customer has online security or not (Yes, No, No internet service)
+- Categorial value, we will one hot encode it to work with the model
+
+**OnlineBackup**: String - Whether the customer has online backup or not (Yes, No, No internet service)
+- Categorial value, we will one hot encode it to work with the model
+
+**DeviceProtection**: String - Whether the customer has device protection or not (Yes, No, No internet service)
+- Categorial value, we will one hot encode it to work with the model
+
+**TechSupport**: String - Whether the customer has tech support or not (Yes, No, No internet service)
+- Categorial value, we will one hot encode it to work with the model
+
+**StreamingTV**: String - Whether the customer has streaming TV or not (Yes, No, No internet service)
+- Categorial value, we will one hot encode it to work with the model
+
+**StreamingMovies**: String - Whether the customer has streaming movies or not (Yes, No, No internet service)
+- Categorial value, we will one hot encode it to work with the model
+
+**Contract**: String - The contract term of the customer (Month-to-month, One year, Two year)
+- Categorial value, we will one hot encode it to work with the model
+
+**PaperlessBilling**: String - Whether the customer has paperless billing or not (Yes, No)
+- Categorial value, we will one hot encode it to work with the model
+
+**PaymentMethod**: String - The customer’s payment method (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic))
+- Categorial value, we will one hot encode it to work with the model
+
+**MonthlyCharges**: String - The amount charged to the customer monthly
+**TotalCharges**: String - The total amount charged to the customer
+- The column is detected as string so we need to convert it to numeric
+- Fill missing values with mean
+
+**Churn**: String - Whether the customer churned or not (Yes, No)
+- Will be removed from the data to be used as label for the training
+
 
 ### Exploratory Visualization
-In this section, you will need to provide some form of visualization that summarizes or extracts a relevant characteristic or feature about the data. The visualization should adequately support the data being used. Discuss why this visualization was chosen and how it is relevant. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant characteristic or feature about the dataset or input data?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+The following plot shows the churn distribution in the data set and since the data is unbalanced we will choose F1 score as our metric.
+![Churn Distribution](../images/churn_distribution.png)
+
+Next we check the scatter matrix for each feature pair:
+![features_matrix](../images/features_matrix.png)
+
+From the figure we notice:
+1. The continues features are skewed and require transformation
+2. The numerical features require scaling normalization
+3. There is a correlation between tenure and total charges
 
 ### Algorithms and Techniques
-In this section, you will need to discuss the algorithms and techniques you intend to use for solving the problem. You should justify the use of each one based on the characteristics of the problem and the problem domain. Questions to ask yourself when writing this section:
-- _Are the algorithms you will use, including any default variables/parameters in the project clearly defined?_
-- _Are the techniques to be used thoroughly discussed and justified?_
-- _Is it made clear how the input data or datasets will be handled by the algorithms and techniques chosen?_
+
+#### Transforming Skewed Continuous Features
+
+Feature whose values tend to lie near a single number, but will also have a non-trivial number of vastly larger or smaller values than that single number can cause algorithms to underperform if the range is not properly normalized. We will use the commonly used logarithmic transformation on the data to resolve the problem
+
+#### Normalizing Numerical Features
+
+Applying a scaling to the data does not change the shape of each feature's distribution; however, normalization ensures that each feature is treated equally when applying supervised learners.
+
+#### XGBoost dominates structured or tabular datasets on classification and regression predictive modeling problems.
+
+The evidence is that it is the go-to algorithm for competition winners on the Kaggle competitive data science platform.
+
+Strengths:
+- they produce similar results as that of models with a lot of feature engineering in a fraction of the time and effort
+- Robust to overfitting
+
+Weaknesses:
+- It has several key parameters that need to be set correctly to achieve the best classification results for any given problem
+
+why?:
+-  Generally works well out of the box with most of problems
 
 ### Benchmark
-In this section, you will need to provide a clearly defined benchmark result or threshold for comparing across performances obtained by your solution. The reasoning behind the benchmark (in the case where it is not an established result) should be discussed. Questions to ask yourself when writing this section:
-- _Has some result or value been provided that acts as a benchmark for measuring performance?_
-- _Is it clear how this result or value was obtained (whether by data or by hypothesis)?_
 
 
 ## III. Methodology

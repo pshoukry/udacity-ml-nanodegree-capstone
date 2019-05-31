@@ -11,6 +11,8 @@ pandas = "*"
 scikit-learn = "*"
 numpy = "*"
 bokeh = "*"
+seaborn = "*"
+tabulate = "*"
 
 [requires]
 python_version = "3.7"
