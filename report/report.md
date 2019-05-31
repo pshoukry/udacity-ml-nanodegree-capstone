@@ -4,7 +4,6 @@ Peter Shoukry
 December 31st, 2050
 
 ## I. Definition
-
 ### Project Overview
 Running a profitable business is quite complicated. You need to juggle lots of balls at the sametime. The ability to do so comes down to the ability to make lots of small decisions everyday. Taking out the guesswork out of the decision process can make all the difference between successful and failed businesses.
 
@@ -48,7 +47,6 @@ we will also use a simple benchmark model that assumes all users are going to ke
 
 
 ## II. Analysis
-
 ### Data Exploration
 In this section, you will be expected to analyze the data you are using for the problem. This data can either be in the form of a dataset (or datasets), input data (or input files), or even an environment. The type of data should be thoroughly described and, if possible, have basic statistics and information presented (such as discussion of input features or defining characteristics about the input or environment). Any abnormalities or interesting qualities about the data that may need to be addressed have been identified (such as features that need to be transformed or the possibility of outliers). Questions to ask yourself when writing this section:
 
@@ -142,7 +140,6 @@ The dataset has the following fields:
 **Churn**: String - Whether the customer churned or not (Yes, No)
 - Will be removed from the data to be used as label for the training
 
-
 ### Exploratory Visualization
 The following plot shows the churn distribution in the data set and since the data is unbalanced we will choose F1 score as our metric.
 ![Churn Distribution](../images/churn_distribution.png)
@@ -156,16 +153,7 @@ From the figure we notice:
 3. There is a correlation between tenure and total charges
 
 ### Algorithms and Techniques
-
-#### Transforming Skewed Continuous Features
-
-Feature whose values tend to lie near a single number, but will also have a non-trivial number of vastly larger or smaller values than that single number can cause algorithms to underperform if the range is not properly normalized. We will use the commonly used logarithmic transformation on the data to resolve the problem
-
-#### Normalizing Numerical Features
-
-Applying a scaling to the data does not change the shape of each feature's distribution; however, normalization ensures that each feature is treated equally when applying supervised learners.
-
-#### XGBoost dominates structured or tabular datasets on classification and regression predictive modeling problems.
+XGBoost is used as it dominates structured or tabular datasets on classification and regression predictive modeling problems.
 
 The evidence is that it is the go-to algorithm for competition winners on the Kaggle competitive data science platform.
 
@@ -181,15 +169,20 @@ why?:
 
 ### Benchmark
 
+We will use a naive classifier as a benchmark the benchmark assumes all users will churn. This means the model will have no true or false negatives) as we aren't making any negative predictions ( churn = 0 ).
+
+In this case:
+Precision = accuracy = TP / Total Predictions = 1869/7043
+Recall = 1
+
+fscore = (1 + .5**2) * precision * recall / ((.5**2 * precision)+ recall) = 0.3110748643520523
+
 
 ## III. Methodology
-_(approx. 3-5 pages)_
-
 ### Data Preprocessing
-In this section, all of your preprocessing steps will need to be clearly documented, if any were necessary. From the previous section, any of the abnormalities or characteristics that you identified about the dataset will be addressed and corrected here. Questions to ask yourself when writing this section:
-- _If the algorithms chosen require preprocessing steps like feature selection or feature transformations, have they been properly documented?_
-- _Based on the **Data Exploration** section, if there were abnormalities or characteristics that needed to be addressed, have they been properly corrected?_
-- _If no preprocessing is needed, has it been made clear why?_
+
+1. Transforming Skewed Continuous Features
+2. Normalizing Numerical Features
 
 ### Implementation
 In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
