@@ -83,62 +83,27 @@ Because of the size of the dataset classical ML techniques will be used to build
 The dataset has the following fields:
 
 **customerID**: String - The customer ID and is unique for each user
-- The customer ID is unique per user and will be removed
-
 **gender**: String - Whether the customer is a male or female (Male, Female)
-- Categorial value, we will one hot encode it to work with the model
-
 **SeniorCitizen**: Number - Whether the customer is senior citizen or not ( 1, 0)
 **Partner**: String - Whether the customer has a partner or not (Yes, No)
-- Categorial value, we will one hot encode it to work with the model
-
 **Dependents**: String - Whether the customer has dependents or not (Yes, No)
-- Categorial value, we will one hot encode it to work with the model
-
 **tenure**: Number - Number of months the customer has stayed with the company
 **PhoneService**: String - Whether the customer has a phone service or not (Yes, No)
-- Categorial value, we will one hot encode it to work with the model
-
 **MultipleLines**: String - Whether the customer has multiple lines or not (Yes, No, No phone service)
-- Categorial value, we will one hot encode it to work with the model
-
 **InternetService**: String - Type of internet service (DSL, Fiber optic, No)
-- Categorial value, we will one hot encode it to work with the model
-
 **OnlineSecurity**: String - Whether the customer has online security or not (Yes, No, No internet service)
-- Categorial value, we will one hot encode it to work with the model
-
 **OnlineBackup**: String - Whether the customer has online backup or not (Yes, No, No internet service)
-- Categorial value, we will one hot encode it to work with the model
-
 **DeviceProtection**: String - Whether the customer has device protection or not (Yes, No, No internet service)
-- Categorial value, we will one hot encode it to work with the model
-
 **TechSupport**: String - Whether the customer has tech support or not (Yes, No, No internet service)
-- Categorial value, we will one hot encode it to work with the model
-
 **StreamingTV**: String - Whether the customer has streaming TV or not (Yes, No, No internet service)
-- Categorial value, we will one hot encode it to work with the model
-
 **StreamingMovies**: String - Whether the customer has streaming movies or not (Yes, No, No internet service)
-- Categorial value, we will one hot encode it to work with the model
-
 **Contract**: String - The contract term of the customer (Month-to-month, One year, Two year)
-- Categorial value, we will one hot encode it to work with the model
-
 **PaperlessBilling**: String - Whether the customer has paperless billing or not (Yes, No)
-- Categorial value, we will one hot encode it to work with the model
-
 **PaymentMethod**: String - The customer’s payment method (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic))
-- Categorial value, we will one hot encode it to work with the model
-
 **MonthlyCharges**: String - The amount charged to the customer monthly
 **TotalCharges**: String - The total amount charged to the customer
-- The column is detected as string so we need to convert it to numeric
-- Fill missing values with mean
-
+The field was missing some values and was interpreted as string cuase missing values where assigned a space. Before we start exploring the data we backfill the missing data with the mean of the column and convert it to string
 **Churn**: String - Whether the customer churned or not (Yes, No)
-- Will be removed from the data to be used as label for the training
 
 ### Exploratory Visualization
 The following plot shows the churn distribution in the data set and since the data is unbalanced we will choose F1 score as our metric.
@@ -180,15 +145,18 @@ fscore = (1 + .5**2) * precision * recall / ((.5**2 * precision)+ recall) = 0.31
 
 ## III. Methodology
 ### Data Preprocessing
-
-1. Transforming Skewed Continuous Features
-2. Normalizing Numerical Features
+1. Drop the user id ( It is unique per user and can't be used in training
+2. Extract labels from the churn column
+3. Transforming Skewed Continuous Features
+4. Normalizing Numerical Features
+5. one-hot-encoding categorial values
+6. Label encoding the churn column
 
 ### Implementation
-In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
-- _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
-- _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
-- _Was there any part of the coding process (e.g., writing complicated functions) that should be documented?_
+In this stage we will: 
+
+1. Split and shuffle the data to a training and a test set
+2. We will train the model on the training data
 
 ### Refinement
 In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
