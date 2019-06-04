@@ -37,10 +37,10 @@ In specific words we are trying to predict if a user is going to stop using our 
 The solution to this problem would be building a model to predict if a customer is going to churn or not. Given data about the user usage of the service, the model can classify into two classes: churning or not-churning. Because of the small size of the selected dataset it is more suitable to use classic ML techniques to deep learning.
 
 ### Metrics
-I will use F1 score as the metrics to evaluate the model because the dataset is unbalanced. The [F1](https://en.wikipedia.org/wiki/F1_score) is the harmonic mean of the precision and recall, where F1 = 1 is the best and 0 is the worst.
+I will use F-beta score as the metrics to evaluate the model because the dataset is unbalanced. The [F-beta](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.fbeta_score.html) is the harmonic mean of the precision and recall, where F-beta = 1 is the best and 0 is the worst.
 
 ```
-F1 = 2 * (precision * recall) / (precision + recall)
+f-beta = (1 + beta^2) * precision * recall / ((beta^2 * precision)+ recall)
 ```
 
 we will also use a simple benchmark model that assumes all users are going to keep using our service (not-churning). By comparing the two models' performance we will be able to identify how much business value we have gained since we have linked the difference between the models with the amount of users we can now try to gain back before they actually churn. 
@@ -48,7 +48,6 @@ we will also use a simple benchmark model that assumes all users are going to ke
 
 ## II. Analysis
 ### Data Exploration
-In this section, you will be expected to analyze the data you are using for the problem. This data can either be in the form of a dataset (or datasets), input data (or input files), or even an environment. The type of data should be thoroughly described and, if possible, have basic statistics and information presented (such as discussion of input features or defining characteristics about the input or environment). Any abnormalities or interesting qualities about the data that may need to be addressed have been identified (such as features that need to be transformed or the possibility of outliers). Questions to ask yourself when writing this section:
 
 The data set is part of IBM watson community data sets. It consists of 7043 records each with 20 features plus one column to indicate if the user did churn or not. A sample of the records is provided below.
 
@@ -82,7 +81,7 @@ Because of the size of the dataset classical ML techniques will be used to build
 
 The dataset has the following fields:
 
-**customerID**: String - The customer ID and is unique for each user
+**customerID**: String - The customer ID and is unique for each user and we will drop it as it doesn't add any value in the model training.
 **gender**: String - Whether the customer is a male or female (Male, Female)
 **SeniorCitizen**: Number - Whether the customer is senior citizen or not ( 1, 0)
 **Partner**: String - Whether the customer has a partner or not (Yes, No)
@@ -106,7 +105,7 @@ The field was missing some values and was interpreted as string cuase missing va
 **Churn**: String - Whether the customer churned or not (Yes, No)
 
 ### Exploratory Visualization
-The following plot shows the churn distribution in the data set and since the data is unbalanced we will choose F1 score as our metric.
+The following plot shows the churn distribution in the data set and since the data is unbalanced we will choose F-beta score as our metric.
 ![Churn Distribution](../images/churn_distribution.png)
 
 Next we check the scatter matrix for each feature pair:
@@ -145,73 +144,117 @@ fscore = (1 + .5**2) * precision * recall / ((.5**2 * precision)+ recall) = 0.31
 
 ## III. Methodology
 ### Data Preprocessing
-1. Drop the user id ( It is unique per user and can't be used in training
-2. Extract labels from the churn column
+
+1. Drop the user id:
+The user id is unique to each user and having it there will not add any value hence we will just drop it.
+
+2. Extract labels from the churn column:
+The churn column is the target of our prediction we remove it from the learning data and use it as labels for the training set.
+
 3. Transforming Skewed Continuous Features
-4. Normalizing Numerical Features
+A dataset may sometimes contain at least one feature with values laying near a single value, but also have a non trivial number of values spread across a wider range. Algorithms can be senstive to such distribution and the results might be highly affected. I used logarithmic transformations to reduce this range and brin those numbers closer together. I transformed tenure, MonthlyCharges and TotalCharges.
+
+4. Scaling Numerical Features
+In order to make sure that each feature is treated equally during the training, numerical values needs to be scaled. Although scaling doesn't change the shape of each feature, observing the data in it's raw form will not be the same as the original. here we scale the data with min_max scaler with a minimum of 0 and a maximum of 1. I scaled tenure, MonthlyCharges and TotalCharges.
+
+
 5. one-hot-encoding categorial values
+We need to change non-numeric features to numberic values for our algorithm to work hence we translate them to numeric values. We one hot encoded gender, Partner, Dependents, PhoneService, 'MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection_Yes, TechSupport, StreamingTV, StreamingMovies, Contract, PaperlessBilling and PaymentMethod.
+
 6. Label encoding the churn column
+We label encode the churn column to also have numeric values.
 
 ### Implementation
-In this stage we will: 
+
+In this stage we will train the model on the avialable dataset, we will: 
 
 1. Split and shuffle the data to a training and a test set
-2. We will train the model on the training data
+First we need to extract a subset of our data to use in testing in order to check if the model generalises properly. I used the sklearn built in train_test_split to separate 20% of the data to be used as test set and used the rest of the data to train on.
+
+2. Train the model on the training data
+I used sklearn GradientBoostClassifier becuase the dataset size was manageable. however, for larger data sets I would have used XGBOOST.
+
+3. Get our predictions
+The third step is to get our models prediction on the test dataset that we extracted ealier
+
+4. We calculate the F-beta(0.5) score as our naive model
+The calculated f-beta score is 0.5809
 
 ### Refinement
-In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
-- _Has an initial solution been found and clearly reported?_
-- _Is the process of improvement clearly documented, such as what techniques were used?_
-- _Are intermediate and final solutions clearly reported as the process is improved?_
+
+As mentioned earlier the GradientBoostingClassifier is gernally great as it usually reaches very good results with limited feature engineering and is very immune to overfitting however the one problem with it is the many hyper parameters that needs to be tuned to reach the best results. I used the skelearn GridSearchCV to try multiple parameter values. I tried these variations
+
+- min_samples_split: [2, 10, 100]
+- min_samples_leaf: [1, 2, 5, 10]
+- max_depth: [1, 3, 10, 100]
+- n_estimators: [100, 1000]
+- max_features: [None, 'sqrt', 'log2']
+
+and the best model we got was GradientBoostingClassifier with the following params:
+
+- criterion='friedman_mse'
+- init=None
+- learning_rate=0.1
+- loss='deviance'
+- max_depth=3
+- max_features='sqrt'
+- max_leaf_nodes=None
+- min_impurity_decrease=0.0
+- min_impurity_split=None 
+- min_samples_leaf=1
+- min_samples_split=2
+- min_weight_fraction_leaf=0.0
+- n_estimators=100
+- n_iter_no_change=None
+- presort='auto'
+- random_state=0
+- subsample=1.0
+- tol=0.0001
+- validation_fraction=0.1
+- verbose=0 
+- warm_start=False
+
+This model gave us a slightly better f-beta score of 0.5957. This proves that with further tunning we can reach better results.
 
 
 ## IV. Results
-_(approx. 2-3 pages)_
-
 ### Model Evaluation and Validation
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
+
+The model was choosen because:
+1. Gradient boosting gets excellent results with minmum feature engineering
+2. Gradient boosting is very immune to overfitting and that is very suitable for a problem set with such a small amount of data
+
+The model was tested using a test subset that was extracted before learning and the model was able to give very good results with such a small amount of data
+
+F-beta-score on the testing data: 0.5957
+Accuracy on the testing data: 0.7913
+
 
 ### Justification
-In this section, your model’s final solution and its results should be compared to the benchmark you established earlier in the project using some type of statistical analysis. You should also justify whether these results and the solution are significant enough to have solved the problem posed in the project. Questions to ask yourself when writing this section:
-- _Are the final results found stronger than the benchmark result reported earlier?_
-- _Have you thoroughly analyzed and discussed the final solution?_
-- _Is the final solution significant enough to have solved the problem?_
 
+The final model had almost than double the f-beta-score of our naive model: 0.5857 vs 0.3110 and had a very reasonable accuracy of ~80% which is almost 2.5 times better accuracy than our naive model. These resuts seem to solve the problem. Although with more data a better model can be built with XGboost or deep learning, for a starting point with the limited data the solution is very reasonable
 
 ## V. Conclusion
-_(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+![Feature Importance](../images/features_importance.png)
+One of the most important aspects of the model we built is understanding which features affect the retension. For example it confirms a simple assumption that the more time the user will use the service the less likely he is to churn. But, it also adds lots of insights like for example it shows that having a monthly contract and high total charges is an indicator of less churn.
+
+
 
 ### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+
+The process used for the project can be summarized in the following steps:
+1. Finding a suitable dataset
+2. Downloading and quickly exploring the data
+3. Creating a baseline benchmark that we can measure success / failure against
+4. Preparing the data
+5. Training the model
+6. Testing and validating the model
+
+I found that the selection of a small data set although helped me focus on the Machine learning aspect of the problem and less focus on the data / feature engineering aspects did limit the approaches that can be used. Also the choice of the gradient boosting implementation of sklearn limits the ability to scale although it makes the implemenation straight forward.
+
 
 ### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
 
------------
-
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?
+To achieve better results I would focus on collecting much more data points ( in real life ) or using a bigger data set. I would also use a training pipeline to test multiple models in case of using classic Machine learning.
