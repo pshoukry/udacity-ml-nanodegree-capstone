@@ -1,10 +1,11 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
 Peter Shoukry
-December 31st, 2050
+June 5th, 2019
 
 ## I. Definition
 ### Project Overview
+
 Running a profitable business is quite complicated. You need to juggle lots of balls at the sametime. The ability to do so comes down to the ability to make lots of small decisions everyday. Taking out the guesswork out of the decision process can make all the difference between successful and failed businesses.
 
 Software as a service ( SaaS ), specially subscription based services, rely on the existing customer base to cover their expenses and to generally maintain a healthy cashflow. Customer churning, leaving or not renewing their subscription, can cost a business dearly in;
@@ -32,16 +33,18 @@ Although the first dataset is interesting and would give lots of insights into c
 - The number of churning users are 1869 ( ~26.5% ) hence the dataset is unbalanced
 
 ### Problem Statement
+
 In specific words we are trying to predict if a user is going to stop using our services ( churn ) by studying his current usage behaviour.
 
 The solution to this problem would be building a model to predict if a customer is going to churn or not. Given data about the user usage of the service, the model can classify into two classes: churning or not-churning. Because of the small size of the selected dataset it is more suitable to use classic ML techniques to deep learning.
 
 ### Metrics
+
 I will use F-beta score as the metrics to evaluate the model because the dataset is unbalanced. The [F-beta](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.fbeta_score.html) is the harmonic mean of the precision and recall, where F-beta = 1 is the best and 0 is the worst.
 
-```
+
 f-beta = (1 + beta^2) * precision * recall / ((beta^2 * precision)+ recall)
-```
+
 
 we will also use a simple benchmark model that assumes all users are going to keep using our service (not-churning). By comparing the two models' performance we will be able to identify how much business value we have gained since we have linked the difference between the models with the amount of users we can now try to gain back before they actually churn. 
 
@@ -105,6 +108,7 @@ The field was missing some values and was interpreted as string cuase missing va
 **Churn**: String - Whether the customer churned or not (Yes, No)
 
 ### Exploratory Visualization
+
 The following plot shows the churn distribution in the data set and since the data is unbalanced we will choose F-beta score as our metric.
 ![Churn Distribution](../images/churn_distribution.png)
 
@@ -117,6 +121,7 @@ From the figure we notice:
 3. There is a correlation between tenure and total charges
 
 ### Algorithms and Techniques
+
 XGBoost is used as it dominates structured or tabular datasets on classification and regression predictive modeling problems.
 
 The evidence is that it is the go-to algorithm for competition winners on the Kaggle competitive data science platform.
@@ -237,6 +242,7 @@ The final model had almost than double the f-beta-score of our naive model: 0.58
 ## V. Conclusion
 
 ### Free-Form Visualization
+
 ![Feature Importance](../images/features_importance.png)
 One of the most important aspects of the model we built is understanding which features affect the retension. For example it confirms a simple assumption that the more time the user will use the service the less likely he is to churn. But, it also adds lots of insights like for example it shows that having a monthly contract and high total charges is an indicator of less churn.
 
