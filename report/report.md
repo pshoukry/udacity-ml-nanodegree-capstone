@@ -136,6 +136,27 @@ Weaknesses:
 why?:
 -  Generally works well out of the box with most of problems
 
+To simply explain gradient boosting let's say that you want to answer a general knowledge contest and you are sitting with a couple of friends: some one only good at math, someone only good at history and someone only good at geography. The way to reach the best answer is to combine their opinions to get the best answer about each topic.
+
+Gradient boosting is just like that it uses a combination of less accurate models to get a better combined model.
+
+This weak model, the one that doesn't know all the answers but know some right ones is called a weak learner and is similar to the guy who only knows math, or history as in the previous example.
+
+The weak learners are usually shallow decision trees. A decision tree gets to the right answer by asking many questions so lets say that you want to decide should you eat that dessert or not a decision tree would be like a good friend who asks you? are you hungary?, do you like it?, are you on diet? and help you reach a decision weather you should eat it or not.
+
+To construct the weak models we simply:
+1. Fit a first model
+2. calculate the errors from that model
+3. Build a model to correct those errors
+4. iterate
+
+We keep doing that using small increments until we get a group of models whose combined classification is much better than each alone
+
+- https://en.wikipedia.org/wiki/Gradient_boosting
+- http://blog.kaggle.com/2017/01/23/a-kaggle-master-explains-gradient-boosting/
+- http://blog.echen.me/2011/03/14/laymans-introduction-to-random-forests/
+
+
 ### Benchmark
 
 We will use a naive classifier as a benchmark the benchmark assumes all users will churn. This means the model will have no true or false negatives) as we aren't making any negative predictions ( churn = 0 ).
@@ -184,6 +205,8 @@ The third step is to get our models prediction on the test dataset that we extra
 
 4. We calculate the F-beta(0.5) score as our naive model
 The calculated f-beta score is 0.5809
+
+The implementation was striaght forward, there wasn't any complications but this is becuase the dataset size is very small if a bigger dataset was used I would have needed to use XGboost instead of the GradientBoostingClassifier implementation in sklearn or the training would have been too slow.
 
 ### Refinement
 
@@ -234,6 +257,9 @@ The model was tested using a test subset that was extracted before learning and 
 F-beta-score on the testing data: 0.5957
 Accuracy on the testing data: 0.7913
 
+To further validate the model ran it with multiple different random states in the range of 0 to 1000 with 100 step and the results where pretty stable with:
+accuracy : mean 0.784954. and variance (0.000000)
+F-beta-score : mean 0.580940. and variance (0.000000)
 
 ### Justification
 
